@@ -2,104 +2,101 @@
 <html lang="pl">
 <head>
   <meta charset="UTF-8">
-  <title>Among Us</title>
-  <meta name="Author" content="michalh3" />
+  <title>Among Us Role Finder</title>
+  <meta name="author" content="michalh3">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <style>
-    body { font-family: Arial, sans-serif; margin: 20px; }
-    .button-container button {
-      display: block;
-      margin: 5px 0;
-      padding: 10px;
+    /* Reset + Global */
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
     }
+
+    body {
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      background: linear-gradient(135deg, #1a1a2e, #16213e);
+      color: #fff;
+      padding: 20px;
+    }
+
+    h1, h2 {
+      text-align: center;
+      margin-bottom: 15px;
+    }
+
+    input[type="text"] {
+      width: 100%;
+      max-width: 500px;
+      display: block;
+      margin: 0 auto 30px auto;
+      padding: 12px 15px;
+      font-size: 16px;
+      border: none;
+      border-radius: 8px;
+      box-shadow: 0 0 10px rgba(0,0,0,0.2);
+    }
+
+    .button-container {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+      gap: 10px;
+    }
+
+    .button-container button {
+      background-color: #0f3460;
+      color: white;
+      border: none;
+      padding: 10px 20px;
+      border-radius: 6px;
+      cursor: pointer;
+      transition: 0.3s ease;
+      min-width: 120px;
+    }
+
+    .button-container button:hover {
+      background-color: #533483;
+    }
+
     #display-text {
-      margin-top: 20px;
-      padding: 10px;
-      border: 1px solid #ccc;
+      background-color: #222;
+      padding: 20px;
+      margin-top: 30px;
+      border-radius: 8px;
+      max-width: 800px;
+      margin-left: auto;
+      margin-right: auto;
+      box-shadow: 0 0 15px rgba(0,0,0,0.4);
+      font-size: 17px;
+      line-height: 1.5;
+    }
+
+    @media (max-width: 600px) {
+      .button-container {
+        flex-direction: column;
+        align-items: center;
+      }
+      .button-container button {
+        width: 100%;
+        max-width: 300px;
+      }
     }
   </style>
 </head>
-<body background="1.gif">
+<body>
 
-  <h2>Szukaj roli</h2>
-  <input type="text" id="search-input" placeholder="Wpisz rolę..." oninput="filterButtons()">
-	
-  <h2>Role: </h2>
-  <div class="button-container" id="button-container">
+  <h1>Among Us - Przegląd ról</h1>
 
-  </div>
+  <input type="text" id="search-input" placeholder="Wpisz nazwę roli..." oninput="filterButtons()">
 
-  <div id="display-text"></div>
+  <h2>Lista ról</h2>
+  <div class="button-container" id="button-container"></div>
+
+  <div id="display-text">Kliknij nazwę roli, aby zobaczyć opis.</div>
 
   <script>
-	const buttonData = [
-  { title: 'Blackmailer', text: 'możesz wyciszyć osoba używając swojej umiejętności, nie będą mogli pisać i mówić na spotkaniu' },
-  { title: 'Hypnotist', text: 'hipnotyzujesz osoby, kiedy chcesz możesz kliknąć mass hysteria na spotkaniu przy swojej osobie, powoduje to, że osoby zaznaczone będą mieli problem z widzeniem' },
-  { title: 'Janitor', text: 'rola usuwa ciała' },
-  { title: 'Miner', text: 'swoją rolą możesz tworzyć nowe venty' },
-  { title: 'Undertaker', text: 'swoją rolą możesz przenosić ciała' },
-  { title: 'Eclipsal', text: 'twoja rola na określony czas oślepia wszystkich przeciwników ' },
-  { title: 'Escapist', text: 'swoją rolą możesz oznaczyć punkt w miejscu, w którym jesteś, przy drugim użyciu teleportujesz się do tego punktu (punkt resetuje się po spotkaniu)' },
-  { title: 'Grenadier', text: 'twoja rola na określony czas pokazuje biały ekran przeciwnikom' },
-  { title: 'Morphling', text: 'rolą możesz pobrać próbkę gracza, przy drugim użyciu zmieniasz się w tego gracza' },
-  { title: 'Swooper', text: 'przy użyciu umiejętności stajesz się niewidzialny na określony czas' },
-  { title: 'Venerer', text: 'umiejętność ma wiele efektów zależących od ilości zabitych graczy przez ciebie, za 1 zabójstwo twoja umiejętność daje efekt kamuflażu, za 2 stajesz się szybszy, za 3 zabójstwo każdy staje się wolniejszy' },
-  { title: 'Bomber', text: 'możesz podłożyć bombę, która zabije wszystkie osoby w polu po kilku sekundach (UWAGA: Bomby również zabijają impostorów)' },
-  { title: 'Scavenger', text: 'Scavenger ma konkretny cel, który ma zabić (pokazuje go strzałka), jeżeli go zabije to otrzymuje szybszy kill cooldown, jeżeli zabije inną osobę otrzyma 3 razy dłuższy kill cooldown' },
-  { title: 'Traitor', text: 'Impostor, w którego losowo może się zamienić crewmate, jeżeli nie ma już impostorów' },
-  { title: 'Warlock', text: 'możesz zabić wiele graczy na raz, jeżeli twój kill cooldown jest naładowany do 100% (kill cooldown szybciej się ładuje, jeżeli jesteś sam)' },
-  { title: 'Amnesiac', text: 'rola „bez roli”, widzisz strzałki do ciał, jeżeli jedno znajdziesz możesz z niego wziąć role osoby zmarłej (Amnesiac nie wygrywa jako crewmate, aby wygrać musi znaleźć rolę)' },
-  { title: 'Guardian Angel', text: 'masz za zadanie ochronić innego gracza, masz umiejętność, którą możesz dać mu tarczę na określony czas (Guardian Angel wygrywa z osobą, którą broni, po zabiciu osoby, którą masz bronić stajesz się Amnesiaciem)' },
-  { title: 'Mercenary', text: 'bronisz innych graczy, jeżeli kogoś obronisz dostajesz pieniądze, za każde pieniądze możesz kogoś przekupić, jeżeli ktoś z przekupionych wygra grę wygrywasz z nim' },
-  { title: 'Survivor', text: 'aby wygrać musisz przetrwać, masz umiejętność tymczasowej obrony' },
-  { title: 'Doomsayer', text: 'aby wygrać musisz zgadnąć rolę graczy podczas spotkania, masz umiejętność obserwowania graczy, która da ci ograniczone informacje o potencjalnych rolach na czacie' },
-  { title: 'Executioner', text: 'musisz wygłosować twój cel, aby wygrać, jeżeli cel zginie staniesz się jesterem' },
-  { title: 'Jester', text: 'aby wygrać musisz zostać wygłosowanym' },
-  { title: 'Phantom', text: 'aby stać się Phantomem musisz zginąć w pierwszej rundzie, aby wygrać jako Phantom musisz zrobić wszystkie zadania, Phantoma można zabić poprzez klikanie go myszką' },
-  { title: 'Arsonist', text: 'umiejętnością polewasz graczy benzyną, po oznaczeniu graczy możesz ich podpalić, zabije to wszystkich oznaczonych graczy' },
-  { title: 'Glitch', text: 'jako Glitch możesz zmieniać się w innych graczy przy użyciu mimic, możesz również hackować innych graczy, co spowoduje że nie będą mogli nić robić przez jakiś czas' },
-  { title: 'Juggernaut', text: 'jako Juggernaut twój kill cooldown zmniejsza się o 5s, po każdym zabójstwie' },
-  { title: 'Plaguebearer', text: 'musisz zarazić wszystkich graczy, możesz to zrobić poprzez użycie umiejętności lub interakcji gracz zarażonego z innym. Jak zarazisz wystarczająco dużo graczy stajesz się Pestilence, nie mogą cię wtedy zabić' },
-  { title: 'Soul Collector', text: 'oznaczasz graczy, oznaczeni gracze nie pozostawiają ciała, tylko dusze, które musisz zebrać aby wygrać' },
-  { title: 'Vampire', text: 'jako wampir możesz ugryźć innego gracz, który nie jest rolą złą, wtedy stanie się też wampirem' },
-  { title: 'Werewolf', text: 'jako wilk możesz zabijać tylko po kliknięciu rampage, po kliknięciu masz krótki kill cooldown i nieskończoną wizję' },
-  { title: 'Haunter', text: 'Haunter jest podobny do Phantoma, możesz nim zostać jeżeli zginiesz jako Crewmate. Haunter ma za zadanie zrobić wszystkie zadania, jeżeli to zrobi każdy na spotkaniu zobaczy kto jest impostorem' },
-  { title: 'Investigator', text: 'widzisz ślady wszystkich graczy' },
-  { title: 'Lookout', text: 'możesz oznaczyć graczy, na spotkaniu na czacie będziesz miał napisane jakie role miały z nimi interakcje' },
-  { title: 'Mystic', text: 'po śmierci gracza zaświeci ci się ekran i na chwilę zobaczysz strzałkę kierującą do ciała' },
-  { title: 'Seer', text: 'swoją umiejętnością możesz sprawdzać czy gracz jest złą zabijającą rolą (czerwony->zła, zielony->dobra)' },
-  { title: 'Snitch', text: 'jeżeli zrobisz wszystkie zadania to na spotkaniu będziesz widział impostorów (UWAGA: jak pozostanie ci jedno zadanie to impostor widzi kim jesteś)' },
-  { title: 'Trapper', text: 'możesz stawiać pułapki, jak kilka osób wejdzie w pułapkę to na spotkaniu na czacie pokażą się ich role' },
-  { title: 'Deputy', text: 'jako Deputy możesz oznaczać graczy, jeżeli oznaczony gracz zginie dostajesz powiadomienie, możesz wtedy spróbować zgadnąć zabójcę na spotkaniu, jeżeli go zgadniesz to on zginie, jeżeli nie to nic się nie stanie' },
-  { title: 'Hunter', text: 'oznaczasz graczy, jeżeli oznaczony gracz wykona interakcję możesz go zabić, nie zginiesz jeżeli trafisz w Crewmate' },
-  { title: 'Sheriff', text: 'możesz zabić każdego gracza, jeżeli jest zły to zginie, jeżeli jest dobry to ty zginiesz' },
-  { title: 'Veteran', text: 'możesz użyć swojej umiejętności dzięki której jak ktoś będzie próbował coś ci zrobić, on zginie (Crewmate również może zginąć)' },
-  { title: 'Vigilante', text: 'możesz zgadywać złe role na spotkaniu' },
-  { title: 'Jailor', text: 'możesz więzić graczy, z uwięzionymi graczami możesz rozmawiać przez czat na spotkaniu (przy pomocy /jail), możesz również zabić uwięzionego gracza, jeżeli gracz będzie dobry to już nie będziesz mógł więzić graczy' },
-  { title: 'Politician', text: 'oznaczasz graczy, jeżeli masz oznaczoną większość graczy to wtedy możesz użyć umiejętności na spotkaniu i zostać Mayorem (który ma 3 głosy zamiast 1)' },
-  { title: 'Prosecutor', text: 'możesz wyrzucić osobę na spotkaniu niezależnie od głosów, jeżeli wyrzucisz Crewmate to zginiesz' },
-  { title: 'Swapper', text: 'możesz zamieniać głosy na spotkaniu' },
-  { title: 'Altruist', text: 'możesz wskrzesić graczy przy pomocy twojej umiejętności' },
-  { title: 'Medic', text: 'dajesz jednemu graczu tarczę która go chroni przed zabójstwem, jeżeli ktoś go będzie próbował zabić dostaniesz alert' },
-  { title: 'Engineer', text: 'możesz używać ventów oraz naprawić sabotaż przy pomocy umiejętności' },
-  { title: 'Imitator', text: 'możesz przy spotkaniu wybrać rolę zabitych dobrych graczy' },
-  { title: 'Medium', text: 'po użyciu umiejętności zobaczysz strzałkę i ducha ostatniego zabitego gracza w tej rundzie' },
-  { title: 'Transporter', text: 'możesz zmienić pozycje 2 graczy ze sobą' }
-];
-
-    function addButton() {
-      const title = document.getElementById('button-title').value.trim();
-      const text = document.getElementById('button-text').value.trim();
-
-      if (!title || !text) {
-        alert("Uzupełnij oba pola.");
-        return;
-      }
-
-      buttonData.push({ title, text });
-      renderButtons();
-      document.getElementById('button-title').value = '';
-      document.getElementById('button-text').value = '';
-    }
+    const buttonData = [ { title: 'Blackmailer', text: 'możesz wyciszyć osoba używając swojej umiejętności, nie będą mogli pisać i mówić na spotkaniu' }, { title: 'Hypnotist', text: 'hipnotyzujesz osoby, kiedy chcesz możesz kliknąć mass hysteria na spotkaniu przy swojej osobie, powoduje to, że osoby zaznaczone będą mieli problem z widzeniem' }, { title: 'Janitor', text: 'rola usuwa ciała' }, { title: 'Miner', text: 'swoją rolą możesz tworzyć nowe venty' }, { title: 'Undertaker', text: 'swoją rolą możesz przenosić ciała' }, { title: 'Eclipsal', text: 'twoja rola na określony czas oślepia wszystkich przeciwników ' }, { title: 'Escapist', text: 'swoją rolą możesz oznaczyć punkt w miejscu, w którym jesteś, przy drugim użyciu teleportujesz się do tego punktu (punkt resetuje się po spotkaniu)' }, { title: 'Grenadier', text: 'twoja rola na określony czas pokazuje biały ekran przeciwnikom' }, { title: 'Morphling', text: 'rolą możesz pobrać próbkę gracza, przy drugim użyciu zmieniasz się w tego gracza' }, { title: 'Swooper', text: 'przy użyciu umiejętności stajesz się niewidzialny na określony czas' }, { title: 'Venerer', text: 'umiejętność ma wiele efektów zależących od ilości zabitych graczy przez ciebie, za 1 zabójstwo twoja umiejętność daje efekt kamuflażu, za 2 stajesz się szybszy, za 3 zabójstwo każdy staje się wolniejszy' }, { title: 'Bomber', text: 'możesz podłożyć bombę, która zabije wszystkie osoby w polu po kilku sekundach (UWAGA: Bomby również zabijają impostorów)' }, { title: 'Scavenger', text: 'Scavenger ma konkretny cel, który ma zabić (pokazuje go strzałka), jeżeli go zabije to otrzymuje szybszy kill cooldown, jeżeli zabije inną osobę otrzyma 3 razy dłuższy kill cooldown' }, { title: 'Traitor', text: 'Impostor, w którego losowo może się zamienić crewmate, jeżeli nie ma już impostorów' }, { title: 'Warlock', text: 'możesz zabić wiele graczy na raz, jeżeli twój kill cooldown jest naładowany do 100% (kill cooldown szybciej się ładuje, jeżeli jesteś sam)' }, { title: 'Amnesiac', text: 'rola „bez roli”, widzisz strzałki do ciał, jeżeli jedno znajdziesz możesz z niego wziąć role osoby zmarłej (Amnesiac nie wygrywa jako crewmate, aby wygrać musi znaleźć rolę)' }, { title: 'Guardian Angel', text: 'masz za zadanie ochronić innego gracza, masz umiejętność, którą możesz dać mu tarczę na określony czas (Guardian Angel wygrywa z osobą, którą broni, po zabiciu osoby, którą masz bronić stajesz się Amnesiaciem)' }, { title: 'Mercenary', text: 'bronisz innych graczy, jeżeli kogoś obronisz dostajesz pieniądze, za każde pieniądze możesz kogoś przekupić, jeżeli ktoś z przekupionych wygra grę wygrywasz z nim' }, { title: 'Survivor', text: 'aby wygrać musisz przetrwać, masz umiejętność tymczasowej obrony' }, { title: 'Doomsayer', text: 'aby wygrać musisz zgadnąć rolę graczy podczas spotkania, masz umiejętność obserwowania graczy, która da ci ograniczone informacje o potencjalnych rolach na czacie' }, { title: 'Executioner', text: 'musisz wygłosować twój cel, aby wygrać, jeżeli cel zginie staniesz się jesterem' }, { title: 'Jester', text: 'aby wygrać musisz zostać wygłosowanym' }, { title: 'Phantom', text: 'aby stać się Phantomem musisz zginąć w pierwszej rundzie, aby wygrać jako Phantom musisz zrobić wszystkie zadania, Phantoma można zabić poprzez klikanie go myszką' }, { title: 'Arsonist', text: 'umiejętnością polewasz graczy benzyną, po oznaczeniu graczy możesz ich podpalić, zabije to wszystkich oznaczonych graczy' }, { title: 'Glitch', text: 'jako Glitch możesz zmieniać się w innych graczy przy użyciu mimic, możesz również hackować innych graczy, co spowoduje że nie będą mogli nić robić przez jakiś czas' }, { title: 'Juggernaut', text: 'jako Juggernaut twój kill cooldown zmniejsza się o 5s, po każdym zabójstwie' }, { title: 'Plaguebearer', text: 'musisz zarazić wszystkich graczy, możesz to zrobić poprzez użycie umiejętności lub interakcji gracz zarażonego z innym. Jak zarazisz wystarczająco dużo graczy stajesz się Pestilence, nie mogą cię wtedy zabić' }, { title: 'Soul Collector', text: 'oznaczasz graczy, oznaczeni gracze nie pozostawiają ciała, tylko dusze, które musisz zebrać aby wygrać' }, { title: 'Vampire', text: 'jako wampir możesz ugryźć innego gracz, który nie jest rolą złą, wtedy stanie się też wampirem' }, { title: 'Werewolf', text: 'jako wilk możesz zabijać tylko po kliknięciu rampage, po kliknięciu masz krótki kill cooldown i nieskończoną wizję' }, { title: 'Haunter', text: 'Haunter jest podobny do Phantoma, możesz nim zostać jeżeli zginiesz jako Crewmate. Haunter ma za zadanie zrobić wszystkie zadania, jeżeli to zrobi każdy na spotkaniu zobaczy kto jest impostorem' }, { title: 'Investigator', text: 'widzisz ślady wszystkich graczy' }, { title: 'Lookout', text: 'możesz oznaczyć graczy, na spotkaniu na czacie będziesz miał napisane jakie role miały z nimi interakcje' }, { title: 'Mystic', text: 'po śmierci gracza zaświeci ci się ekran i na chwilę zobaczysz strzałkę kierującą do ciała' }, { title: 'Seer', text: 'swoją umiejętnością możesz sprawdzać czy gracz jest złą zabijającą rolą (czerwony->zła, zielony->dobra)' }, { title: 'Snitch', text: 'jeżeli zrobisz wszystkie zadania to na spotkaniu będziesz widział impostorów (UWAGA: jak pozostanie ci jedno zadanie to impostor widzi kim jesteś)' }, { title: 'Trapper', text: 'możesz stawiać pułapki, jak kilka osób wejdzie w pułapkę to na spotkaniu na czacie pokażą się ich role' }, { title: 'Deputy', text: 'jako Deputy możesz oznaczać graczy, jeżeli oznaczony gracz zginie dostajesz powiadomienie, możesz wtedy spróbować zgadnąć zabójcę na spotkaniu, jeżeli go zgadniesz to on zginie, jeżeli nie to nic się nie stanie' }, { title: 'Hunter', text: 'oznaczasz graczy, jeżeli oznaczony gracz wykona interakcję możesz go zabić, nie zginiesz jeżeli trafisz w Crewmate' }, { title: 'Sheriff', text: 'możesz zabić każdego gracza, jeżeli jest zły to zginie, jeżeli jest dobry to ty zginiesz' }, { title: 'Veteran', text: 'możesz użyć swojej umiejętności dzięki której jak ktoś będzie próbował coś ci zrobić, on zginie (Crewmate również może zginąć)' }, { title: 'Vigilante', text: 'możesz zgadywać złe role na spotkaniu' }, { title: 'Jailor', text: 'możesz więzić graczy, z uwięzionymi graczami możesz rozmawiać przez czat na spotkaniu (przy pomocy /jail), możesz również zabić uwięzionego gracza, jeżeli gracz będzie dobry to już nie będziesz mógł więzić graczy' }, { title: 'Politician', text: 'oznaczasz graczy, jeżeli masz oznaczoną większość graczy to wtedy możesz użyć umiejętności na spotkaniu i zostać Mayorem (który ma 3 głosy zamiast 1)' }, { title: 'Prosecutor', text: 'możesz wyrzucić osobę na spotkaniu niezależnie od głosów, jeżeli wyrzucisz Crewmate to zginiesz' }, { title: 'Swapper', text: 'możesz zamieniać głosy na spotkaniu' }, { title: 'Altruist', text: 'możesz wskrzesić graczy przy pomocy twojej umiejętności' }, { title: 'Medic', text: 'dajesz jednemu graczu tarczę która go chroni przed zabójstwem, jeżeli ktoś go będzie próbował zabić dostaniesz alert' }, { title: 'Engineer', text: 'możesz używać ventów oraz naprawić sabotaż przy pomocy umiejętności' }, { title: 'Imitator', text: 'możesz przy spotkaniu wybrać rolę zabitych dobrych graczy' }, { title: 'Medium', text: 'po użyciu umiejętności zobaczysz strzałkę i ducha ostatniego zabitego gracza w tej rundzie' }, { title: 'Transporter', text: 'możesz zmienić pozycje 2 graczy ze sobą' } ];
 
     function renderButtons(filter = '') {
       const container = document.getElementById('button-container');
@@ -107,7 +104,7 @@
 
       buttonData
         .filter(btn => btn.title.toLowerCase().includes(filter.toLowerCase()))
-        .forEach((btn, index) => {
+        .forEach((btn) => {
           const button = document.createElement('button');
           button.textContent = btn.title;
           button.onclick = () => {
@@ -115,15 +112,15 @@
           };
           container.appendChild(button);
         });
-		function showText(text) {
-		document.getElementById('display-text').textContent = text;
-		}
     }
 
     function filterButtons() {
       const query = document.getElementById('search-input').value;
       renderButtons(query);
     }
+
+    // Render on load
+    renderButtons();
   </script>
 
 </body>
