@@ -6,7 +6,6 @@
   <meta name="author" content="michalh3">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <style>
-    /* Reset + Global */
     * {
       box-sizing: border-box;
       margin: 0;
@@ -15,16 +14,101 @@
 
     body {
       font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-      background: linear-gradient(135deg, #1a1a2e, #16213e);
       color: #fff;
+      min-height: 100vh;
+      overflow-x: hidden;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      position: relative;
       padding: 20px;
+      background: radial-gradient(circle at 50% 30%, #0a0f2b 0%, #05071a 100%);
+      transition: color 0.5s ease;
     }
 
-    h1, h2 {
+    /* === ANIMOWANE GWIAZDY === */
+    #stars, #stars2, #stars3 {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 200%;
+      height: 200%;
+      z-index: -3;
+      background-repeat: repeat;
+      animation: moveStars 120s linear infinite;
+    }
+
+    #stars {
+      background-image: radial-gradient(2px 2px at 10px 10px, #ffffffcc, transparent);
+      background-size: 200px 200px;
+      opacity: 0.6;
+    }
+
+    #stars2 {
+      background-image: radial-gradient(1.5px 1.5px at 20px 20px, #66aaffaa, transparent);
+      background-size: 150px 150px;
+      animation-duration: 90s;
+      opacity: 0.4;
+      z-index: -2;
+    }
+
+    #stars3 {
+      background-image: radial-gradient(1px 1px at 30px 30px, #ff3355aa, transparent);
+      background-size: 100px 100px;
+      animation-duration: 60s;
+      opacity: 0.3;
+      z-index: -1;
+    }
+
+    @keyframes moveStars {
+      from { transform: translate3d(0, 0, 0); }
+      to { transform: translate3d(-500px, 500px, 0); }
+    }
+
+    /* === CZĄSTKI (PARTICLES) === */
+    #particles {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      overflow: hidden;
+      z-index: -1;
+      pointer-events: none;
+    }
+
+    .particle {
+      position: absolute;
+      background-color: rgba(255, 255, 255, 0.8);
+      border-radius: 50%;
+      animation: float 10s infinite ease-in-out;
+      filter: drop-shadow(0 0 4px #1e90ff);
+    }
+
+    @keyframes float {
+      0% { transform: translateY(0) scale(1); opacity: 1; }
+      50% { transform: translateY(-40px) scale(1.3); opacity: 0.6; }
+      100% { transform: translateY(0) scale(1); opacity: 1; }
+    }
+
+    /* === NAGŁÓWEK === */
+    h1 {
+      text-align: center;
+      margin-bottom: 10px;
+      font-size: 2.5rem;
+      text-shadow: 0 0 15px #ff3355, 0 0 40px #ff335577;
+      letter-spacing: 1px;
+    }
+
+    h2 {
       text-align: center;
       margin-bottom: 15px;
+      font-size: 1.4rem;
+      color: #c5cfff;
+      text-shadow: 0 0 8px #1e90ff66;
     }
 
+    /* === INPUT === */
     input[type="text"] {
       width: 100%;
       max-width: 500px;
@@ -32,44 +116,137 @@
       margin: 0 auto 30px auto;
       padding: 12px 15px;
       font-size: 16px;
-      border: none;
-      border-radius: 8px;
-      box-shadow: 0 0 10px rgba(0,0,0,0.2);
+      border: 2px solid #1e90ff55;
+      border-radius: 10px;
+      background-color: rgba(10, 15, 40, 0.8);
+      color: #fff;
+      box-shadow: 0 0 10px #1e90ff33;
+      transition: all 0.3s ease;
     }
 
+    input[type="text"]:focus {
+      outline: none;
+      box-shadow: 0 0 20px #1e90ff99;
+      border-color: #1e90ffcc;
+    }
+
+    /* === PRZYCISKI RÓL === */
     .button-container {
       display: flex;
       flex-wrap: wrap;
       justify-content: center;
       gap: 10px;
+      transition: all 0.3s ease;
     }
 
     .button-container button {
-      background-color: #0f3460;
-      color: white;
-      border: none;
-      padding: 10px 20px;
-      border-radius: 6px;
+      background: linear-gradient(145deg, #1e1e4a, #29295f);
+      color: #fff;
+      border: 2px solid #1e90ff44;
+      padding: 10px 18px;
+      border-radius: 8px;
       cursor: pointer;
       transition: 0.3s ease;
       min-width: 120px;
+      font-size: 15px;
+      box-shadow: 0 0 8px #1e90ff22;
     }
 
     .button-container button:hover {
-      background-color: #533483;
+      background: linear-gradient(145deg, #ff3355, #d92448);
+      box-shadow: 0 0 20px #ff335599, 0 0 40px #ff335544;
+      transform: scale(1.08);
     }
 
+    /* === OPIS ROLI === */
     #display-text {
-      background-color: #222;
+      background: rgba(15, 20, 45, 0.85);
       padding: 20px;
       margin-top: 30px;
-      border-radius: 8px;
+      border-radius: 10px;
       max-width: 800px;
       margin-left: auto;
       margin-right: auto;
-      box-shadow: 0 0 15px rgba(0,0,0,0.4);
+      box-shadow: 0 0 25px rgba(0, 0, 0, 0.6), 0 0 25px #1e90ff22;
       font-size: 17px;
-      line-height: 1.5;
+      line-height: 1.6;
+      border: 1px solid #1e90ff44;
+      transition: all 0.4s ease;
+      backdrop-filter: blur(5px);
+    }
+
+    /* === TRYB KOMPAKTOWY === */
+    body.compact-mode .button-container button {
+      padding: 6px 10px;
+      font-size: 13px;
+      min-width: 80px;
+      border-radius: 4px;
+    }
+
+    body.compact-mode input[type="text"] {
+      padding: 8px 10px;
+      font-size: 14px;
+      max-width: 400px;
+    }
+
+    body.compact-mode #display-text {
+      font-size: 15px;
+      padding: 15px;
+    }
+
+    /* === TRYB WYSOKIEGO KONTRASTU === */
+    body.high-contrast {
+      background: #000;
+      color: #fff;
+    }
+
+    body.high-contrast #stars,
+    body.high-contrast #stars2,
+    body.high-contrast #stars3,
+    body.high-contrast #particles {
+      opacity: 1;
+    }
+
+    /* === ANIMACJE PRZEJŚCIA === */
+    @keyframes fadeInMode {
+      from { opacity: 0.6; filter: blur(2px); }
+      to { opacity: 1; filter: blur(0); }
+    }
+
+    body.mode-animating {
+      animation: fadeInMode 0.5s ease forwards;
+    }
+
+    /* === PRZYCISKI TRYBÓW === */
+    .mode-buttons {
+      display: flex;
+      justify-content: center;
+      gap: 15px;
+      margin-top: 40px;
+      padding-bottom: 20px;
+      z-index: 10;
+    }
+
+    .mode-buttons button {
+      background: linear-gradient(145deg, #1e1e4a, #29295f);
+      color: #fff;
+      border: 2px solid #1e90ff55;
+      padding: 10px 20px;
+      border-radius: 10px;
+      cursor: pointer;
+      font-size: 14px;
+      transition: all 0.3s ease;
+      box-shadow: 0 0 8px #1e90ff22;
+    }
+
+    .mode-buttons button:hover {
+      background: linear-gradient(145deg, #ff3355, #d92448);
+      box-shadow: 0 0 20px #ff335599, 0 0 30px #ff335544;
+      transform: scale(1.05);
+    }
+
+    .mode-buttons button:active {
+      transform: scale(0.95);
     }
 
     @media (max-width: 600px) {
@@ -86,8 +263,13 @@
 </head>
 <body>
 
-  <h1>Among Us - Przegląd ról</h1>
+  <!-- Gwiazdy i cząstki -->
+  <div id="stars"></div>
+  <div id="stars2"></div>
+  <div id="stars3"></div>
+  <div id="particles"></div>
 
+  <h1>Among Us - Przegląd ról</h1>
   <input type="text" id="search-input" placeholder="Wpisz nazwę roli..." oninput="filterButtons()">
 
   <h2>Lista ról</h2>
@@ -95,13 +277,17 @@
 
   <div id="display-text">Kliknij nazwę roli, aby zobaczyć opis.</div>
 
+  <div class="mode-buttons">
+    <button id="compactModeToggle">Tryb kompaktowy</button>
+    <button id="contrastModeToggle">Tryb wysokiego kontrastu</button>
+  </div>
+
   <script>
     const buttonData = [ { title: 'Blackmailer', text: 'możesz wyciszyć osoba używając swojej umiejętności, nie będą mogli pisać i mówić na spotkaniu' }, { title: 'Hypnotist', text: 'hipnotyzujesz osoby, kiedy chcesz możesz kliknąć mass hysteria na spotkaniu przy swojej osobie, powoduje to, że osoby zaznaczone będą mieli problem z widzeniem' }, { title: 'Janitor', text: 'rola usuwa ciała' }, { title: 'Miner', text: 'swoją rolą możesz tworzyć nowe venty' }, { title: 'Undertaker', text: 'swoją rolą możesz przenosić ciała' }, { title: 'Eclipsal', text: 'twoja rola na określony czas oślepia wszystkich przeciwników ' }, { title: 'Escapist', text: 'swoją rolą możesz oznaczyć punkt w miejscu, w którym jesteś, przy drugim użyciu teleportujesz się do tego punktu (punkt resetuje się po spotkaniu)' }, { title: 'Grenadier', text: 'twoja rola na określony czas pokazuje biały ekran przeciwnikom' }, { title: 'Morphling', text: 'rolą możesz pobrać próbkę gracza, przy drugim użyciu zmieniasz się w tego gracza' }, { title: 'Swooper', text: 'przy użyciu umiejętności stajesz się niewidzialny na określony czas' }, { title: 'Venerer', text: 'umiejętność ma wiele efektów zależących od ilości zabitych graczy przez ciebie, za 1 zabójstwo twoja umiejętność daje efekt kamuflażu, za 2 stajesz się szybszy, za 3 zabójstwo każdy staje się wolniejszy' }, { title: 'Bomber', text: 'możesz podłożyć bombę, która zabije wszystkie osoby w polu po kilku sekundach (UWAGA: Bomby również zabijają impostorów)' }, { title: 'Scavenger', text: 'Scavenger ma konkretny cel, który ma zabić (pokazuje go strzałka), jeżeli go zabije to otrzymuje szybszy kill cooldown, jeżeli zabije inną osobę otrzyma 3 razy dłuższy kill cooldown' }, { title: 'Traitor', text: 'Impostor, w którego losowo może się zamienić crewmate, jeżeli nie ma już impostorów' }, { title: 'Warlock', text: 'możesz zabić wiele graczy na raz, jeżeli twój kill cooldown jest naładowany do 100% (kill cooldown szybciej się ładuje, jeżeli jesteś sam)' }, { title: 'Amnesiac', text: 'rola „bez roli”, widzisz strzałki do ciał, jeżeli jedno znajdziesz możesz z niego wziąć role osoby zmarłej (Amnesiac nie wygrywa jako crewmate, aby wygrać musi znaleźć rolę)' }, { title: 'Guardian Angel', text: 'masz za zadanie ochronić innego gracza, masz umiejętność, którą możesz dać mu tarczę na określony czas (Guardian Angel wygrywa z osobą, którą broni, po zabiciu osoby, którą masz bronić stajesz się Amnesiaciem)' }, { title: 'Mercenary', text: 'bronisz innych graczy, jeżeli kogoś obronisz dostajesz pieniądze, za każde pieniądze możesz kogoś przekupić, jeżeli ktoś z przekupionych wygra grę wygrywasz z nim' }, { title: 'Survivor', text: 'aby wygrać musisz przetrwać, masz umiejętność tymczasowej obrony' }, { title: 'Doomsayer', text: 'aby wygrać musisz zgadnąć rolę graczy podczas spotkania, masz umiejętność obserwowania graczy, która da ci ograniczone informacje o potencjalnych rolach na czacie' }, { title: 'Executioner', text: 'musisz wygłosować twój cel, aby wygrać, jeżeli cel zginie staniesz się jesterem' }, { title: 'Jester', text: 'aby wygrać musisz zostać wygłosowanym' }, { title: 'Phantom', text: 'aby stać się Phantomem musisz zginąć w pierwszej rundzie, aby wygrać jako Phantom musisz zrobić wszystkie zadania, Phantoma można zabić poprzez klikanie go myszką' }, { title: 'Arsonist', text: 'umiejętnością polewasz graczy benzyną, po oznaczeniu graczy możesz ich podpalić, zabije to wszystkich oznaczonych graczy' }, { title: 'Glitch', text: 'jako Glitch możesz zmieniać się w innych graczy przy użyciu mimic, możesz również hackować innych graczy, co spowoduje że nie będą mogli nić robić przez jakiś czas' }, { title: 'Juggernaut', text: 'jako Juggernaut twój kill cooldown zmniejsza się o 5s, po każdym zabójstwie' }, { title: 'Plaguebearer', text: 'musisz zarazić wszystkich graczy, możesz to zrobić poprzez użycie umiejętności lub interakcji gracz zarażonego z innym. Jak zarazisz wystarczająco dużo graczy stajesz się Pestilence, nie mogą cię wtedy zabić' }, { title: 'Soul Collector', text: 'oznaczasz graczy, oznaczeni gracze nie pozostawiają ciała, tylko dusze, które musisz zebrać aby wygrać' }, { title: 'Vampire', text: 'jako wampir możesz ugryźć innego gracz, który nie jest rolą złą, wtedy stanie się też wampirem' }, { title: 'Werewolf', text: 'jako wilk możesz zabijać tylko po kliknięciu rampage, po kliknięciu masz krótki kill cooldown i nieskończoną wizję' }, { title: 'Haunter', text: 'Haunter jest podobny do Phantoma, możesz nim zostać jeżeli zginiesz jako Crewmate. Haunter ma za zadanie zrobić wszystkie zadania, jeżeli to zrobi każdy na spotkaniu zobaczy kto jest impostorem' }, { title: 'Investigator', text: 'widzisz ślady wszystkich graczy' }, { title: 'Lookout', text: 'możesz oznaczyć graczy, na spotkaniu na czacie będziesz miał napisane jakie role miały z nimi interakcje' }, { title: 'Mystic', text: 'po śmierci gracza zaświeci ci się ekran i na chwilę zobaczysz strzałkę kierującą do ciała' }, { title: 'Seer', text: 'swoją umiejętnością możesz sprawdzać czy gracz jest złą zabijającą rolą (czerwony->zła, zielony->dobra)' }, { title: 'Snitch', text: 'jeżeli zrobisz wszystkie zadania to na spotkaniu będziesz widział impostorów (UWAGA: jak pozostanie ci jedno zadanie to impostor widzi kim jesteś)' }, { title: 'Trapper', text: 'możesz stawiać pułapki, jak kilka osób wejdzie w pułapkę to na spotkaniu na czacie pokażą się ich role' }, { title: 'Deputy', text: 'jako Deputy możesz oznaczać graczy, jeżeli oznaczony gracz zginie dostajesz powiadomienie, możesz wtedy spróbować zgadnąć zabójcę na spotkaniu, jeżeli go zgadniesz to on zginie, jeżeli nie to nic się nie stanie' }, { title: 'Hunter', text: 'oznaczasz graczy, jeżeli oznaczony gracz wykona interakcję możesz go zabić, nie zginiesz jeżeli trafisz w Crewmate' }, { title: 'Sheriff', text: 'możesz zabić każdego gracza, jeżeli jest zły to zginie, jeżeli jest dobry to ty zginiesz' }, { title: 'Veteran', text: 'możesz użyć swojej umiejętności dzięki której jak ktoś będzie próbował coś ci zrobić, on zginie (Crewmate również może zginąć)' }, { title: 'Vigilante', text: 'możesz zgadywać złe role na spotkaniu' }, { title: 'Jailor', text: 'możesz więzić graczy, z uwięzionymi graczami możesz rozmawiać przez czat na spotkaniu (przy pomocy /jail), możesz również zabić uwięzionego gracza, jeżeli gracz będzie dobry to już nie będziesz mógł więzić graczy' }, { title: 'Politician', text: 'oznaczasz graczy, jeżeli masz oznaczoną większość graczy to wtedy możesz użyć umiejętności na spotkaniu i zostać Mayorem (który ma 3 głosy zamiast 1)' }, { title: 'Prosecutor', text: 'możesz wyrzucić osobę na spotkaniu niezależnie od głosów, jeżeli wyrzucisz Crewmate to zginiesz' }, { title: 'Swapper', text: 'możesz zamieniać głosy na spotkaniu' }, { title: 'Altruist', text: 'możesz wskrzesić graczy przy pomocy twojej umiejętności' }, { title: 'Medic', text: 'dajesz jednemu graczu tarczę która go chroni przed zabójstwem, jeżeli ktoś go będzie próbował zabić dostaniesz alert' }, { title: 'Engineer', text: 'możesz używać ventów oraz naprawić sabotaż przy pomocy umiejętności' }, { title: 'Imitator', text: 'możesz przy spotkaniu wybrać rolę zabitych dobrych graczy' }, { title: 'Medium', text: 'po użyciu umiejętności zobaczysz strzałkę i ducha ostatniego zabitego gracza w tej rundzie' }, { title: 'Transporter', text: 'możesz zmienić pozycje 2 graczy ze sobą' } ];
 
     function renderButtons(filter = '') {
       const container = document.getElementById('button-container');
       container.innerHTML = '';
-
       buttonData
         .filter(btn => btn.title.toLowerCase().includes(filter.toLowerCase()))
         .forEach((btn) => {
@@ -119,9 +305,48 @@
       renderButtons(query);
     }
 
-    // Render on load
+    const compactBtn = document.getElementById('compactModeToggle');
+    const contrastBtn = document.getElementById('contrastModeToggle');
+
+    function animateModeChange(callback) {
+      document.body.classList.add('mode-animating');
+      callback();
+      setTimeout(() => document.body.classList.remove('mode-animating'), 500);
+    }
+
+    compactBtn.addEventListener('click', () => {
+      animateModeChange(() => {
+        document.body.classList.toggle('compact-mode');
+        compactBtn.textContent = document.body.classList.contains('compact-mode')
+          ? 'Wyłącz tryb kompaktowy'
+          : 'Tryb kompaktowy';
+      });
+    });
+
+    contrastBtn.addEventListener('click', () => {
+      animateModeChange(() => {
+        document.body.classList.toggle('high-contrast');
+        contrastBtn.textContent = document.body.classList.contains('high-contrast')
+          ? 'Wyłącz wysoki kontrast'
+          : 'Tryb wysokiego kontrastu';
+      });
+    });
+
+    // === GENEROWANIE CZĄSTEK ===
+    const particleContainer = document.getElementById('particles');
+    for (let i = 0; i < 35; i++) {
+      const p = document.createElement('div');
+      p.classList.add('particle');
+      const size = Math.random() * 4 + 1;
+      p.style.width = `${size}px`;
+      p.style.height = `${size}px`;
+      p.style.left = `${Math.random() * 100}%`;
+      p.style.top = `${Math.random() * 100}%`;
+      p.style.animationDuration = `${5 + Math.random() * 10}s`;
+      particleContainer.appendChild(p);
+    }
+
     renderButtons();
   </script>
-
 </body>
 </html>
